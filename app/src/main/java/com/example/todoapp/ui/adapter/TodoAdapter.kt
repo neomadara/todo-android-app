@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.data.model.TodoModel
 import com.example.todoapp.databinding.AdapterTodoBinding
 class TodoRecyclerAdapter: RecyclerView.Adapter<TodoViewHolder>() {
-    var todoList = mutableListOf<TodoModel>()
+    private var todoList = mutableListOf<TodoModel>()
 
     fun setTodo(todos: List<TodoModel>) {
         this.todoList = todos.toMutableList()
