@@ -5,6 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface TodoApiClient {
-    @GET("/todos")
+    @GET("/api/todos")
     suspend fun getAllTodos(): Response<List<TodoModel>>
 }

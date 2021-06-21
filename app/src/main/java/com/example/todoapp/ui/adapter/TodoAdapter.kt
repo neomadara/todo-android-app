@@ -22,9 +22,9 @@ class TodoRecyclerAdapter: RecyclerView.Adapter<TodoViewHolder>() {
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val todo = todoList[position]
-        holder.binding.todoId.text = todo.id.toString()
-        holder.binding.todoTitle.text = todo.title
-        holder.binding.todoCompleted.text = todo.completed
+        // holder.binding.todoId.text = todo.id.toString()
+        holder.binding.tvTitle.text = todo.title
+        // holder.binding.todoCompleted.text = todo.completed
     }
 
     override fun getItemCount(): Int {
