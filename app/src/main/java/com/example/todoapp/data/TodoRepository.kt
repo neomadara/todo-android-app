@@ -9,7 +9,11 @@ class TodoRepository {
 
     suspend fun getAllTodos(): List<TodoModel>{
         val response = api.getTodos()
-        TodoProvider.todos = response
+        TodoProvider.todos = response as MutableList<TodoModel>
         return response
     }
+
+    /*suspend fun saveTodo(todo: TodoModel): TodoModel {
+        val response = api.saveTodo(todo)
+    }*/
 }
