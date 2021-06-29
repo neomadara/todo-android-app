@@ -30,5 +30,10 @@ class MainActivity : AppCompatActivity() {
             binding.progress.isVisible = it
         })
 
+        binding.floatingActionButton.setOnClickListener {
+            val dialog = CreateTodoDialogFragment()
+            dialog.show(supportFragmentManager, "createTodoDialog")
+        }
+
     }
 }
