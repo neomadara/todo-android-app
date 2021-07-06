@@ -13,7 +13,8 @@ class TodoRepository {
         return response
     }
 
-    /*suspend fun saveTodo(todo: TodoModel): TodoModel {
-        val response = api.saveTodo(todo)
-    }*/
+    suspend fun saveTodo(todoTitle: String): TodoModel? {
+        val todoObj = TodoModel(title = todoTitle)
+        return api.saveTodo(todoObj)
+    }
 }
