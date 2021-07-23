@@ -28,9 +28,12 @@ class CreateTodoDialogFragment: DialogFragment() {
 
             binding.btnCreateTodo.setOnClickListener {
                 todoViewModel.saveTodo(binding.etTodoTitle.text.toString())
-                // TODO: deberia esperar una respuesta y luego hacer el dissmis????
-                // dismiss()
             }
+
+            todoViewModel.dismissDialog.observe(this, {
+                if(it) dismiss()
+            })
+
         }
 
         return AlertDialog.Builder(requireActivity())
