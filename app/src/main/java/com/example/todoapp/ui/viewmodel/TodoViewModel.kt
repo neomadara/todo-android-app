@@ -13,10 +13,14 @@ class TodoViewModel: ViewModel() {
     private val TAG = "TodoViewModel"
     val todoList = MutableLiveData<MutableList<TodoModel>>()
     val isLoading = MutableLiveData<Boolean>()
+    val showToastSuccessfully = MutableLiveData<Boolean>()
+    val showToastError = MutableLiveData<Boolean>()
+    val dismissDialog = MutableLiveData<Boolean>()
+    val updateTodoList = MutableLiveData<Boolean>()
 
     var getTodosUseCase = GetTodosUseCase()
 
-    fun onCreate() {
+    fun getTodos() {
         viewModelScope.launch {
             isLoading.postValue(true)
             val result = getTodosUseCase()
@@ -35,11 +39,11 @@ class TodoViewModel: ViewModel() {
             Log.d(TAG, "result use case -> $result")
             if (result is TodoModel) {
                 Log.d(TAG, "todoList -> $todoList")
-                todoList.value?.add(result)
-                todoList.value = todoList.value
+                showToastSuccessfully.postValue(true)
+            } else {
+                showToastError.postValue(true)
             }
+            dismissDialog.postValue(true)
         }
     }
-
-    // TODO: create another function for update the list of TODOS called updateListTodos
 }
