@@ -2,6 +2,7 @@ package com.example.todoapp.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import com.example.todoapp.databinding.ActivityMainBinding
@@ -20,7 +21,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvTodos.adapter = adapter
 
-        todoViewModel.onCreate()
+        setupUI()
+    }
+
+    private fun setupUI() {
+        todoViewModel.getTodos()
 
         todoViewModel.todoList.observe(this, {
             adapter.setTodo(it)
@@ -30,10 +35,28 @@ class MainActivity : AppCompatActivity() {
             binding.progress.isVisible = it
         })
 
+        todoViewModel.updateTodoList.observe(this, {
+            if (it) todoViewModel.getTodos()
+        })
+
+        val dialog = CreateTodoDialogFragment()
         binding.floatingActionButton.setOnClickListener {
-            val dialog = CreateTodoDialogFragment()
+            todoViewModel.dismissDialog.postValue(false)
             dialog.show(supportFragmentManager, "createTodoDialog")
         }
 
+        todoViewModel.showToastSuccessfully.observe(this, { showToastSuccessfully ->
+            showToastSuccessfully.let {
+                todoViewModel.showToastSuccessfully.value = false
+                Toast.makeText(applicationContext,"this is toast message",Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        todoViewModel.showToastError.observe(this, { showToastError ->
+            showToastError.let {
+                todoViewModel.showToastError.value = false
+                Toast.makeText(applicationContext,"this is toast message",Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
