@@ -16,6 +16,7 @@ class TodoService {
     suspend fun getTodos():List<TodoModel>{
         return withContext(Dispatchers.IO) {
             val response = retrofit.create(TodoApiClient::class.java).getAllTodos()
+            Log.d(TAG, "getTodos services -> ${response.body() ?: emptyList()}")
             response.body() ?: emptyList()
         }
     }
@@ -31,13 +32,8 @@ class TodoService {
             val response = retrofit.create(TodoApiClient::class.java).saveTodo(requestBody)
 
             Log.d(TAG, "response -> $response")
-            /*if (response.code() == 201) {
-                Log.d(TAG, "response service ok -> ${response.body()}()")
-                response.body()
-                return
-            }*/
 
-            when (response.code()) {
+            when (response.code()) { // TODO: refactor this
                 201 -> Log.d(TAG, "response service")
                 else -> Log.d(TAG, "response service error")
             }
