@@ -17,8 +17,8 @@ class TodoViewModel: ViewModel() {
     val todoListLiveData: LiveData<MutableList<TodoModel>> = _todoList
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoadingLiveData: LiveData<Boolean> = _isLoading
-    private val _dismissDialog = MutableLiveData<Boolean>()
-    val dismissDialog: LiveData<Boolean> get() = _dismissDialog
+    // private val _dismissDialog = MutableLiveData<Boolean>()
+    // val dismissDialog: LiveData<Boolean> get() = _dismissDialog
 
     var getTodosUseCase = GetTodosUseCase()
 
@@ -42,7 +42,7 @@ class TodoViewModel: ViewModel() {
             if (result is TodoModel) {
                 Log.d(TAG, "save todo use case ok")
             }
-            _dismissDialog.value = true
+            getTodos()
         }
     }
 }
