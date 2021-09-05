@@ -4,23 +4,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import com.example.todoapp.data.model.TodoModel
 
 @Composable
-fun TodoScreen(todos: LiveData<List<TodoModel>>) {
+fun TodoScreen(todos: List<TodoModel>) {
     val todoName = remember { mutableStateOf(TextFieldValue()) }
 
     Column {
@@ -42,9 +41,7 @@ fun TodoScreen(todos: LiveData<List<TodoModel>>) {
 }
 
 @Composable
-fun TodoList(todoListLiveData: LiveData<List<TodoModel>>, modifier: Modifier = Modifier) {
-    val todoList by todoListLiveData.observeAsState(initial = emptyList())
-
+fun TodoList(todoList: List<TodoModel>, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier) {
         items(items = todoList) { todo ->
             TodoCard(todo)
@@ -72,14 +69,21 @@ fun TodoCard(todo: TodoModel) {
     }
 }
 
+@Preview
+@Composable
+fun TodoCardPreview() {
+    val todo = TodoModel("", "todo 1")
+    MaterialTheme {
+        TodoCard(todo)
+    }
+}
 
-
-
-/*
 @Preview
 @Composable
 fun DefaultPreview() {
+    val todo = TodoModel("", "todo 1")
+    val todos = List(1) { todo }
     MaterialTheme {
-        TodoScreen()
+        TodoScreen(todos = todos)
     }
-}*/
+}

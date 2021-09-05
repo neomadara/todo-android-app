@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import com.example.todoapp.databinding.ActivityMainBinding
 import com.example.todoapp.ui.viewmodel.TodoViewModel
 
@@ -69,7 +71,9 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun TodoActivityScreen(todoViewModel: TodoViewModel) {
+    val todoList by todoViewModel.todoList.observeAsState(initial = emptyList())
+
     TodoScreen(
-        todos = todoViewModel.todoList
+        todos = todoList
     )
 }
