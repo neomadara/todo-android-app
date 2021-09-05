@@ -49,11 +49,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        todoViewModel.todoListLiveData.observe(this, {
+        todoViewModel.todoList.observe(this, {
             adapter.setTodo(it)
         })
 
-        todoViewModel.isLoadingLiveData.observe(this, {
+        todoViewModel.isLoading.observe(this, {
             binding.progress.isVisible = it
         })
     }

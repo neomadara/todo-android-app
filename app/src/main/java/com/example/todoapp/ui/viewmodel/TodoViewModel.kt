@@ -14,11 +14,10 @@ class TodoViewModel: ViewModel() {
     private val TAG = "TodoViewModel"
 
     private val _todoList = MutableLiveData<MutableList<TodoModel>>()
-    val todoListLiveData: LiveData<MutableList<TodoModel>> = _todoList
+    val todoList: LiveData<MutableList<TodoModel>> get() = _todoList
+
     private val _isLoading = MutableLiveData<Boolean>()
-    val isLoadingLiveData: LiveData<Boolean> = _isLoading
-    // private val _dismissDialog = MutableLiveData<Boolean>()
-    // val dismissDialog: LiveData<Boolean> get() = _dismissDialog
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     var getTodosUseCase = GetTodosUseCase()
 
