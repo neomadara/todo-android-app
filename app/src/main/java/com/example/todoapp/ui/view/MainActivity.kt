@@ -70,6 +70,6 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun TodoActivityScreen(todoViewModel: TodoViewModel) {
     TodoScreen(
-        items = todoViewModel.todoList
+        todos = todoViewModel.todoList
     )
 }
