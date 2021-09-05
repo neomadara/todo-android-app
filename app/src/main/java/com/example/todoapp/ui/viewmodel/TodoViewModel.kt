@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 class TodoViewModel: ViewModel() {
     private val TAG = "TodoViewModel"
 
-    private val _todoList = MutableLiveData<MutableList<TodoModel>>()
-    val todoList: LiveData<MutableList<TodoModel>> get() = _todoList
+    private val _todoList = MutableLiveData<List<TodoModel>>()
+    val todoList: LiveData<List<TodoModel>> get() = _todoList
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -27,7 +27,7 @@ class TodoViewModel: ViewModel() {
             val result = getTodosUseCase()
             Log.d(TAG, "result get todos use case $result")
             if(!result.isNullOrEmpty()){
-                _todoList.postValue(result as MutableList<TodoModel>?)
+                _todoList.postValue(result as List<TodoModel>?)
             }
             _isLoading.postValue(false)
         }
