@@ -2,30 +2,36 @@ package com.example.todoapp.ui.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 import com.example.todoapp.databinding.ActivityMainBinding
-import com.example.todoapp.ui.adapter.TodoRecyclerAdapter
 import com.example.todoapp.ui.viewmodel.TodoViewModel
 
 class MainActivity : AppCompatActivity() {
     private val todoViewModel: TodoViewModel by viewModels()
-    private val adapter = TodoRecyclerAdapter()
-    lateinit var binding: ActivityMainBinding
+    // private val adapter = TodoRecyclerAdapter()
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.rvTodos.adapter = adapter
+        // binding.rvTodos.adapter = adapter
+        todoViewModel.getTodos()
 
-        setupUI()
+        binding.composeView.setContent {
+            MaterialTheme {
+                TodoActivityScreen(todoViewModel)
+            }
+        }
+
+        // setupUI()
     }
 
     private fun setupUI() {
-        todoViewModel.getTodos()
+        /*todoViewModel.getTodos()
 
         todoViewModel.todoList.observe(this, {
             adapter.setTodo(it)
@@ -57,6 +63,13 @@ class MainActivity : AppCompatActivity() {
                 todoViewModel.showToastError.value = false
                 Toast.makeText(applicationContext,"this is toast message",Toast.LENGTH_SHORT).show()
             }
-        })
+        })*/
     }
+}
+
+@Composable
+fun TodoActivityScreen(todoViewModel: TodoViewModel) {
+    TodoScreen(
+        items = todoViewModel.todoList
+    )
 }
