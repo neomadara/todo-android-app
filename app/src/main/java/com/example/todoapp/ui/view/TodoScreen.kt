@@ -18,14 +18,15 @@ import com.example.todoapp.data.model.TodoModel
 
 @Composable
 fun TodoScreen(todos: List<TodoModel>) {
-    val todoName = remember { mutableStateOf(TextFieldValue()) }
+    val todoState = remember { mutableStateOf(TextFieldValue()) }
 
     Column {
         Text("TODOS", Modifier.align(CenterHorizontally))
         TextField(
             label = { Text("Enter a TODO") },
-            value = todoName.value,
-            onValueChange = { todoName.value = it },
+            value = todoState.value,
+            onValueChange = { todoState.value = it },
+            maxLines = 1,
             modifier = Modifier
                 .align(CenterHorizontally)
                 .fillMaxWidth()
