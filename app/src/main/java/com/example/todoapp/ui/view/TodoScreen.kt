@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.todoapp.data.model.TodoModel
 
 @Composable
-fun TodoScreen(todos: List<TodoModel>) {
+fun TodoScreen(todos: List<TodoModel>, onAddTodo: (String) -> Unit) {
     val todoState = remember { mutableStateOf(TextFieldValue()) }
 
     Column {
@@ -31,7 +31,7 @@ fun TodoScreen(todos: List<TodoModel>) {
             onValueChange = { todoState.value = it },
             maxLines = 1,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { /* TODO: SAVE TODO */ }),
+            keyboardActions = KeyboardActions(onDone = { onAddTodo(todoState.value.text) }),
             modifier = Modifier
                 .align(CenterHorizontally)
                 .fillMaxWidth()
@@ -56,9 +56,12 @@ fun TodoList(todoList: List<TodoModel>, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun DefaultPreview() {
-    val todo = TodoModel("", "todo 1")
-    val todos = List(1) { todo }
+    val todos = listOf(
+        TodoModel("1", "todo 1"),
+        TodoModel("2", "todo 2"),
+        TodoModel("3", "todo 3")
+    )
     MaterialTheme {
-        TodoScreen(todos = todos)
+        TodoScreen(todos = todos, {})
     }
 }

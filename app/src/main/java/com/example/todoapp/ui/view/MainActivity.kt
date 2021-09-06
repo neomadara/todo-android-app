@@ -33,6 +33,7 @@ fun TodoActivityScreen(todoViewModel: TodoViewModel) {
     val todoList by todoViewModel.todoList.observeAsState(initial = emptyList())
 
     TodoScreen(
-        todos = todoList
+        todos = todoList,
+        onAddTodo = { todoViewModel.saveTodo(it) }
     )
 }
