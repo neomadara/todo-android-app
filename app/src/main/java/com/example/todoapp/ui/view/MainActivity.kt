@@ -30,10 +30,13 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun TodoActivityScreen(todoViewModel: TodoViewModel) {
     todoViewModel.getTodos()
+
     val todoList by todoViewModel.todoList.observeAsState(initial = emptyList())
+    val isLoading by todoViewModel.isLoading.observeAsState(initial = true)
 
     TodoScreen(
         todos = todoList,
-        onAddTodo = { todoViewModel.saveTodo(it) }
+        onAddTodo = { todoViewModel.saveTodo(it) },
+        isLoading = isLoading
     )
 }
