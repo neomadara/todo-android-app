@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +46,7 @@ fun TodoScreen(todos: List<TodoModel>, onAddTodo: (String) -> Unit, isLoading: B
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
                     onAddTodo(todoState.value.text)
+                    todoState.value = TextFieldValue()
                 }),
                 modifier = Modifier
                     .align(CenterHorizontally)
