@@ -16,7 +16,7 @@ class TodoViewModel: ViewModel() {
     private val _todoList = MutableLiveData<List<TodoModel>>()
     val todoList: LiveData<List<TodoModel>> get() = _todoList
 
-    private val _isLoading = MutableLiveData<Boolean>()
+    private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
     var getTodosUseCase = GetTodosUseCase()
