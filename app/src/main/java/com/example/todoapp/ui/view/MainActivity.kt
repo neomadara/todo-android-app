@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        todoViewModel.getTodos()
+
         binding.composeView.setContent {
             MaterialTheme {
                 TodoActivityScreen(todoViewModel)
@@ -29,8 +31,6 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun TodoActivityScreen(todoViewModel: TodoViewModel) {
-    todoViewModel.getTodos()
-
     val todoList by todoViewModel.todoList.observeAsState(initial = emptyList())
     val isLoading by todoViewModel.isLoading.observeAsState(initial = true)
 
