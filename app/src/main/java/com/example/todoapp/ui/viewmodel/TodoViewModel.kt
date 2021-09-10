@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.data.model.TodoModel
+import com.example.todoapp.domain.CompleteTodoUseCase
 import com.example.todoapp.domain.GetTodosUseCase
 import com.example.todoapp.domain.SaveTodoUseCase
 import kotlinx.coroutines.launch
@@ -41,6 +42,15 @@ class TodoViewModel: ViewModel() {
             if (result is TodoModel) {
                 Log.d(TAG, "save todo use case ok")
             }
+            getTodos()
+        }
+    }
+
+    fun completeTodo(todoId: String) {
+        viewModelScope.launch {
+            val completeTodoUseCase = CompleteTodoUseCase(todoId)
+            val result = completeTodoUseCase()
+            Log.d(TAG, "result use case -> $result")
             getTodos()
         }
     }
