@@ -37,7 +37,7 @@ fun TodoScreen(todos: List<TodoModel>, onAddTodo: (String) -> Unit, isLoading: B
         }
     } else {
         Column {
-            Text("TODOS", Modifier.align(CenterHorizontally))
+            Text("TODOS", Modifier.align(CenterHorizontally).padding(top = 8.dp))
             TextField(
                 label = { Text("Enter a TODO") },
                 value = todoState.value,
@@ -53,10 +53,16 @@ fun TodoScreen(todos: List<TodoModel>, onAddTodo: (String) -> Unit, isLoading: B
                     .fillMaxWidth()
                     .padding(
                         start = 8.dp,
-                        end = 8.dp
+                        end = 8.dp,
+                        top = 8.dp
                     )
             )
-            TodoList(todos, modifier = Modifier.weight(1f))
+            TodoList(
+                todos,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(5.dp)
+            )
         }
     }
 }

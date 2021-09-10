@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.todoapp.data.model.TodoModel
 
 @Composable
@@ -16,7 +17,6 @@ fun TodoCard(todo: TodoModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
             .padding(5.dp),
         elevation = 10.dp,
     ) {
@@ -26,7 +26,12 @@ fun TodoCard(todo: TodoModel) {
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(todo.title)
+            Text(
+                todo.title,
+                modifier = Modifier
+                .padding(start = 5.dp, top = 5.dp, bottom = 5.dp),
+                fontSize = 16.sp
+            )
         }
     }
 }
