@@ -79,6 +79,6 @@ fun DefaultPreview() {
         TodoModel("3", "todo 3")
     )
     MaterialTheme {
-        TodoScreen(todos = todos, {}, true)
+        TodoScreen(todos = todos, {}, false)
     }
 }
