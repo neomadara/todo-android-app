@@ -22,7 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.example.todoapp.data.model.TodoModel
 
 @Composable
-fun TodoScreen(todos: List<TodoModel>, onAddTodo: (String) -> Unit, isLoading: Boolean) {
+fun TodoScreen(
+    todos: List<TodoModel>,
+    onAddTodo: (String) -> Unit,
+    isLoading: Boolean,
+    onCompleteTodo: (String) -> Unit
+) {
     val todoState = remember { mutableStateOf(TextFieldValue()) }
 
     if (isLoading) {
@@ -61,17 +66,18 @@ fun TodoScreen(todos: List<TodoModel>, onAddTodo: (String) -> Unit, isLoading: B
                 todos,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(5.dp)
+                    .padding(5.dp),
+                onComplete = onCompleteTodo
             )
         }
     }
 }
 
 @Composable
-fun TodoList(todoList: List<TodoModel>, modifier: Modifier = Modifier) {
+fun TodoList(todoList: List<TodoModel>, modifier: Modifier = Modifier, onComplete: (String) -> Unit) {
     LazyColumn(modifier = modifier) {
         items(items = todoList) { todo ->
-            TodoCard(todo)
+            TodoCard(todo, onComplete)
         }
     }
 }
@@ -85,6 +91,6 @@ fun DefaultPreview() {
         TodoModel("3", "todo 3")
     )
     MaterialTheme {
-        TodoScreen(todos = todos, {}, false)
+        TodoScreen(todos = todos, {}, false, {})
     }
 }
