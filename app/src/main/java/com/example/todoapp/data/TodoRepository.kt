@@ -17,4 +17,8 @@ class TodoRepository {
         val todoObj = TodoModel(title = todoTitle)
         return api.saveTodo(todoObj)
     }
+
+    suspend fun completeTodo(todoId: String): Int {
+        return api.completeTodo(todoId)
+    }
 }
