@@ -33,7 +33,7 @@ class TodoService {
 
             Log.d(TAG, "response -> $response")
 
-            when (response.code()) { // TODO: refactor this
+            when (response.code()) {
                 201 -> Log.d(TAG, "response service")
                 else -> Log.d(TAG, "response service error")
             }
@@ -41,4 +41,17 @@ class TodoService {
             response.body()
         }
     }
+
+    suspend fun completeTodo(todoId: String): Int {
+        return withContext(Dispatchers.IO) {
+            Log.d(TAG, "todo complete ${todoId}")
+            val response = retrofit.create(TodoApiClient::class.java).completedTodo(todoId)
+
+            Log.d(TAG, "response -> $response")
+
+            return@withContext response.code()
+        }
+    }
+
+
 }
