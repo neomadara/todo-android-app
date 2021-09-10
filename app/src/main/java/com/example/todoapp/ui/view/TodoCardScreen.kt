@@ -2,9 +2,12 @@ package com.example.todoapp.ui.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,7 +16,9 @@ import androidx.compose.ui.unit.sp
 import com.example.todoapp.data.model.TodoModel
 
 @Composable
-fun TodoCard(todo: TodoModel) {
+fun TodoCard(todo: TodoModel, onComplete: (String) -> Unit) {
+    val checkedState = remember { mutableStateOf(todo.completed) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -22,15 +27,23 @@ fun TodoCard(todo: TodoModel) {
     ) {
         Row(
             modifier = Modifier
+                .padding(horizontal = 8.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 todo.title,
                 modifier = Modifier
-                .padding(start = 5.dp, top = 5.dp, bottom = 5.dp),
+                .padding(top = 5.dp, bottom = 5.dp),
                 fontSize = 16.sp
+            )
+            Checkbox(
+                checked = checkedState.value,
+                onCheckedChange = {
+                    checkedState.value = it
+                    onComplete(todo._id)
+                                  },
             )
         }
     }
@@ -39,8 +52,8 @@ fun TodoCard(todo: TodoModel) {
 @Preview
 @Composable
 fun TodoCardPreview() {
-    val todo = TodoModel("", "todo 1")
+    val todo = TodoModel("", "todo 1", true)
     MaterialTheme {
-        TodoCard(todo)
+        TodoCard(todo, {})
     }
 }
