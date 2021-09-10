@@ -37,6 +37,7 @@ fun TodoActivityScreen(todoViewModel: TodoViewModel) {
     TodoScreen(
         todos = todoList,
         onAddTodo = { todoViewModel.saveTodo(it) },
+        onCompleteTodo = { todoViewModel.completeTodo(it) },
         isLoading = isLoading
     )
 }
