@@ -9,9 +9,16 @@ import com.example.todoapp.data.model.TodoModel
 import com.example.todoapp.domain.CompleteTodoUseCase
 import com.example.todoapp.domain.GetTodosUseCase
 import com.example.todoapp.domain.SaveTodoUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TodoViewModel: ViewModel() {
+@HiltViewModel
+class TodoViewModel @Inject constructor(
+    private val getTodosUseCase: GetTodosUseCase,
+    private val saveTodoUseCase: SaveTodoUseCase,
+    private val completeTodoUseCase: CompleteTodoUseCase,
+) : ViewModel() {
     private val TAG = "TodoViewModel"
 
     private val _todoList = MutableLiveData<List<TodoModel>>()
@@ -19,8 +26,6 @@ class TodoViewModel: ViewModel() {
 
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> get() = _isLoading
-
-    var getTodosUseCase = GetTodosUseCase()
 
     fun getTodos() {
         viewModelScope.launch {
@@ -36,8 +41,7 @@ class TodoViewModel: ViewModel() {
 
     fun saveTodo(title: String) {
         viewModelScope.launch {
-            val saveTodoUseCase = SaveTodoUseCase(title)
-            val result = saveTodoUseCase()
+            val result = saveTodoUseCase(title)
             Log.d(TAG, "result use case -> $result")
             if (result is TodoModel) {
                 Log.d(TAG, "save todo use case ok")
@@ -48,8 +52,7 @@ class TodoViewModel: ViewModel() {
 
     fun completeTodo(todoId: String) {
         viewModelScope.launch {
-            val completeTodoUseCase = CompleteTodoUseCase(todoId)
-            val result = completeTodoUseCase()
+            val result = completeTodoUseCase(todoId)
             Log.d(TAG, "result use case -> $result")
             getTodos()
         }
