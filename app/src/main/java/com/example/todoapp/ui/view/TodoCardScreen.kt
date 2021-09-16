@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,7 +37,8 @@ fun TodoCard(todo: TodoModel, onComplete: (String) -> Unit) {
                 todo.title,
                 modifier = Modifier
                 .padding(top = 5.dp, bottom = 5.dp),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                textDecoration = if (checkedState.value) TextDecoration.LineThrough else TextDecoration.None
             )
             Checkbox(
                 checked = checkedState.value,
