@@ -3,13 +3,12 @@ package com.example.todoapp.data
 import com.example.todoapp.data.model.TodoModel
 import com.example.todoapp.data.model.TodoProvider
 import com.example.todoapp.data.network.TodoService
+import javax.inject.Inject
 
-class TodoRepository {
-    private val api = TodoService()
-
+class TodoRepository @Inject constructor(private val api:TodoService, private val todoProvider: TodoProvider) {
     suspend fun getAllTodos(): List<TodoModel>{
         val response = api.getTodos()
-        TodoProvider.todos = response as MutableList<TodoModel>
+        todoProvider.todos = response as MutableList<TodoModel>
         return response
     }
 
