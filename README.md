@@ -2,8 +2,8 @@
 
 ## This project involves the following practices and technologies
 
-- mvvm
-- clean architecture
-- retrofit
-- coroutines
+- MVVM
+- Clean architecture
+- Retrofit
+- Coroutines
 - Dependency injection
