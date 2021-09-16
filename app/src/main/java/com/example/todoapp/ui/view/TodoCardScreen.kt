@@ -45,7 +45,7 @@ fun TodoCard(todo: TodoModel, onComplete: (String) -> Unit) {
                 onCheckedChange = {
                     checkedState.value = it
                     onComplete(todo._id)
-                                  },
+                },
             )
         }
     }
