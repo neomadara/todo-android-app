@@ -6,3 +6,4 @@
 - clean architecture
 - retrofit
 - coroutines
+- Dependency injection
