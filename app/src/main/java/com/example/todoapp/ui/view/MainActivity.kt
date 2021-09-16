@@ -9,7 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import com.example.todoapp.databinding.ActivityMainBinding
 import com.example.todoapp.ui.viewmodel.TodoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val todoViewModel: TodoViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
