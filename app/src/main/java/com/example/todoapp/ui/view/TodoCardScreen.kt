@@ -19,7 +19,6 @@ import com.example.todoapp.data.model.TodoModel
 @Composable
 fun TodoCard(todo: TodoModel, onComplete: (String) -> Unit) {
     val checkedState = remember { mutableStateOf(todo.completed) }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,6 +45,7 @@ fun TodoCard(todo: TodoModel, onComplete: (String) -> Unit) {
                     checkedState.value = it
                     onComplete(todo._id)
                 },
+                enabled = !todo.completed
             )
         }
     }
