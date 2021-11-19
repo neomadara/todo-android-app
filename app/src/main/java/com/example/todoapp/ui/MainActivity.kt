@@ -1,4 +1,4 @@
-package com.example.todoapp.ui.view
+package com.example.todoapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import com.example.todoapp.databinding.ActivityMainBinding
+import com.example.todoapp.ui.view.TodoScreen
 import com.example.todoapp.ui.viewmodel.TodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
