@@ -7,3 +7,4 @@
 - Retrofit
 - Coroutines
 - Dependency injection
+- Jetpack Compose
