@@ -27,7 +27,11 @@ class TodoViewModel @Inject constructor(
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    fun getTodos() {
+    init {
+        getTodos()
+    }
+
+    private fun getTodos() {
         viewModelScope.launch {
             _isLoading.postValue(true)
             val result = getTodosUseCase()
