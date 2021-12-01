@@ -1,6 +1,7 @@
 package com.example.todoapp.di
 
 import com.example.todoapp.data.network.TodoApiClient
+import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,7 @@ object NetworkModule {
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://serverless-neomadara.vercel.app")
+            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

@@ -2,6 +2,7 @@ package com.example.todoapp.data.network
 
 import android.util.Log
 import com.example.todoapp.data.model.TodoModel
+import com.skydoves.sandwich.ApiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -12,12 +13,8 @@ import javax.inject.Inject
 class TodoService @Inject constructor(private val api:TodoApiClient){
     private val TAG = "TodoService"
 
-    suspend fun getTodos():List<TodoModel>{
-        return withContext(Dispatchers.IO) {
-            val response = api.getAllTodos()
-            Log.d(TAG, "getTodos services -> ${response.body() ?: emptyList()}")
-            response.body() ?: emptyList()
-        }
+    suspend fun getTodos(): ApiResponse<List<TodoModel>> {
+        return api.getAllTodos()
     }
 
     suspend fun saveTodo(todo: TodoModel): TodoModel? {

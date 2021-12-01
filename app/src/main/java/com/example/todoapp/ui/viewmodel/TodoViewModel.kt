@@ -10,6 +10,7 @@ import com.example.todoapp.domain.CompleteTodoUseCase
 import com.example.todoapp.domain.GetTodosUseCase
 import com.example.todoapp.domain.SaveTodoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,12 +35,11 @@ class TodoViewModel @Inject constructor(
     private fun getTodos() {
         viewModelScope.launch {
             _isLoading.postValue(true)
-            val result = getTodosUseCase()
-            Log.d(TAG, "result get todos use case $result")
-            if(!result.isNullOrEmpty()){
-                _todoList.postValue(result as List<TodoModel>?)
+            getTodosUseCase().collect { todoList ->
+                Log.d(TAG, "result get todos use case $todoList")
+                _todoList.postValue(todoList as List<TodoModel>?)
+                _isLoading.postValue(false)
             }
-            _isLoading.postValue(false)
         }
     }
 
