@@ -11,19 +11,29 @@ import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class TodoRepository @Inject constructor(private val api:TodoService) {
 
     @WorkerThread
-    fun getAllTodos() = flow {
+    fun fetchTodos(
+        onStart: () -> Unit,
+        onCompletion: () -> Unit,
+        onError: (String) -> Unit
+    ) = flow {
         api.getTodos()
             .suspendOnSuccess {
                 emit(data)
             }
-            .onError { Log.e("error", message()) }
-            .onException { Log.e("error", message()) }
-    }.flowOn(Dispatchers.IO)
+            .onError {
+                onError(message())
+            }
+            .onException {
+                onError(message())
+            }
+    }.onStart { onStart() }.onCompletion { onCompletion() }.flowOn(Dispatchers.IO)
 
     suspend fun saveTodo(todoTitle: String): TodoModel? {
         val todoObj = TodoModel(title = todoTitle)

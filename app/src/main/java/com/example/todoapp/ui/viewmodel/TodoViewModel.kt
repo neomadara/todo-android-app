@@ -29,16 +29,18 @@ class TodoViewModel @Inject constructor(
     val isLoading: LiveData<Boolean> get() = _isLoading
 
     init {
-        getTodos()
+        fetchTodos()
     }
 
-    private fun getTodos() {
+    private fun fetchTodos() {
         viewModelScope.launch {
-            _isLoading.postValue(true)
-            getTodosUseCase().collect { todoList ->
+            getTodosUseCase(
+                onStart = { _isLoading.postValue(true) },
+                onCompletion = { _isLoading.postValue(false) },
+                onError = { Log.e("ERROR", it) }
+            ).collect { todoList ->
                 Log.d(TAG, "result get todos use case $todoList")
-                _todoList.postValue(todoList as List<TodoModel>?)
-                _isLoading.postValue(false)
+                _todoList.postValue(todoList)
             }
         }
     }
@@ -50,7 +52,7 @@ class TodoViewModel @Inject constructor(
             if (result is TodoModel) {
                 Log.d(TAG, "save todo use case ok")
             }
-            getTodos()
+            fetchTodos()
         }
     }
 
@@ -58,7 +60,7 @@ class TodoViewModel @Inject constructor(
         viewModelScope.launch {
             val result = completeTodoUseCase(todoId)
             Log.d(TAG, "result use case -> $result")
-            getTodos()
+            fetchTodos()
         }
     }
 }
