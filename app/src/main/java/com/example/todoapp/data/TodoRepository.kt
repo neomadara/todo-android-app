@@ -1,6 +1,5 @@
 package com.example.todoapp.data
 
-import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.todoapp.data.model.TodoModel
 import com.example.todoapp.data.network.TodoService
@@ -11,16 +10,12 @@ import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 class TodoRepository @Inject constructor(private val api:TodoService) {
 
     @WorkerThread
     fun fetchTodos(
-        onStart: () -> Unit,
-        onCompletion: () -> Unit,
         onError: (String) -> Unit
     ) = flow {
         api.getTodos()
@@ -33,7 +28,7 @@ class TodoRepository @Inject constructor(private val api:TodoService) {
             .onException {
                 onError(message())
             }
-    }.onStart { onStart() }.onCompletion { onCompletion() }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.IO)
 
     suspend fun saveTodo(todoTitle: String): TodoModel? {
         val todoObj = TodoModel(title = todoTitle)

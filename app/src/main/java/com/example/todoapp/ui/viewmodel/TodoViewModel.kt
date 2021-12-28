@@ -11,6 +11,8 @@ import com.example.todoapp.domain.GetTodosUseCase
 import com.example.todoapp.domain.SaveTodoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,21 +29,31 @@ class TodoViewModel @Inject constructor(
 
     private val _isLoading = MutableLiveData(true)
     val isLoading: LiveData<Boolean> get() = _isLoading
+    
+    private val _isSaving = MutableLiveData(false)
+    val isSaving: LiveData<Boolean> get() = _isSaving
+
+    private val _isUpdating = MutableLiveData(false)
+    val isUpdating: LiveData<Boolean> get() = _isUpdating
 
     init {
-        fetchTodos()
+        fetchTodos( 
+            onStart = { _isLoading.postValue(true) }, 
+            onCompletion = {_isLoading.postValue(false)} 
+        )
     }
 
-    private fun fetchTodos() {
+    private fun fetchTodos(onStart: () -> Unit, onCompletion: () -> Unit,) {
         viewModelScope.launch {
             getTodosUseCase(
-                onStart = { _isLoading.postValue(true) },
-                onCompletion = { _isLoading.postValue(false) },
                 onError = { Log.e("ERROR", it) }
-            ).collect { todoList ->
-                Log.d(TAG, "result get todos use case $todoList")
-                _todoList.postValue(todoList)
-            }
+            )
+                .onStart { onStart() }
+                .onCompletion { onCompletion() }
+                .collect { todoList ->
+                    Log.d(TAG, "result get todos use case $todoList")
+                    _todoList.postValue(todoList)
+                }
         }
     }
 
@@ -52,7 +64,7 @@ class TodoViewModel @Inject constructor(
             if (result is TodoModel) {
                 Log.d(TAG, "save todo use case ok")
             }
-            fetchTodos()
+            fetchTodos(onStart = { _isSaving.postValue(true) }, onCompletion = { _isSaving.postValue(false) })
         }
     }
 
@@ -60,7 +72,7 @@ class TodoViewModel @Inject constructor(
         viewModelScope.launch {
             val result = completeTodoUseCase(todoId)
             Log.d(TAG, "result use case -> $result")
-            fetchTodos()
+            fetchTodos(onStart = { _isUpdating.postValue(true) }, onCompletion = { _isUpdating.postValue(false) })
         }
     }
 }

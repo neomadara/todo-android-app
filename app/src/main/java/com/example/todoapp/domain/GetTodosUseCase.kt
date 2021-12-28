@@ -8,12 +8,8 @@ import javax.inject.Inject
 class GetTodosUseCase @Inject constructor(private val repository: TodoRepository){
 
     operator fun invoke(
-        onStart: () -> Unit,
-        onCompletion: () -> Unit,
         onError: (String) -> Unit
     ): Flow<List<TodoModel>> = repository.fetchTodos(
-        onStart = { onStart() },
-        onCompletion = { onCompletion()},
         onError = { onError(it) },
     )
 }

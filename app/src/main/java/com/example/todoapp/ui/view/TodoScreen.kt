@@ -17,6 +17,8 @@ fun TodoScreen(
     todos: List<TodoModel>,
     onAddTodo: (String) -> Unit,
     isLoading: Boolean,
+    isUpdating: Boolean,
+    isSaving: Boolean,
     onCompleteTodo: (String) -> Unit
 ) {
     if (isLoading) {
@@ -32,6 +34,12 @@ fun TodoScreen(
                     .padding(5.dp),
                 onComplete = onCompleteTodo
             )
+        }
+        if(isUpdating) {
+            Toast("Updating TODOS...")
+        }
+        if(isSaving) {
+            Toast("Saving TODO...")
         }
     }
 }
@@ -54,6 +62,6 @@ fun DefaultPreview() {
         TodoModel("3", "todo 3")
     )
     MaterialTheme {
-        TodoScreen(todos = todos, {}, false, {})
+        TodoScreen(todos = todos, {}, false, false, false, {})
     }
 }
