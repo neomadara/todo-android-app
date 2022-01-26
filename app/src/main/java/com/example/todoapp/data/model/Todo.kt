@@ -1,6 +1,6 @@
 package com.example.todoapp.data.model
 
-data class TodoModel(
+data class Todo(
     val _id: String = "",
     val title: String,
     val completed: Boolean = false

@@ -1,7 +1,7 @@
 package com.example.todoapp.data
 
 import androidx.annotation.WorkerThread
-import com.example.todoapp.data.model.TodoModel
+import com.example.todoapp.data.model.Todo
 import com.example.todoapp.data.network.TodoService
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
@@ -30,8 +30,8 @@ class TodoRepository @Inject constructor(private val api:TodoService) {
             }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun saveTodo(todoTitle: String): TodoModel? {
-        val todoObj = TodoModel(title = todoTitle)
+    suspend fun saveTodo(todoTitle: String): Todo? {
+        val todoObj = Todo(title = todoTitle)
         return api.saveTodo(todoObj)
     }
 

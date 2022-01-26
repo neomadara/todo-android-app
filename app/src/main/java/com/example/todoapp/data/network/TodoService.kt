@@ -1,7 +1,7 @@
 package com.example.todoapp.data.network
 
 import android.util.Log
-import com.example.todoapp.data.model.TodoModel
+import com.example.todoapp.data.model.Todo
 import com.skydoves.sandwich.ApiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,11 +13,11 @@ import javax.inject.Inject
 class TodoService @Inject constructor(private val api:TodoApiClient){
     private val TAG = "TodoService"
 
-    suspend fun getTodos(): ApiResponse<List<TodoModel>> {
+    suspend fun getTodos(): ApiResponse<List<Todo>> {
         return api.getAllTodos()
     }
 
-    suspend fun saveTodo(todo: TodoModel): TodoModel? {
+    suspend fun saveTodo(todo: Todo): Todo? {
         return withContext(Dispatchers.IO) {
             Log.d(TAG, "todo model -> $todo")
 
@@ -40,11 +40,9 @@ class TodoService @Inject constructor(private val api:TodoApiClient){
 
     suspend fun completeTodo(todoId: String): Int {
         return withContext(Dispatchers.IO) {
-            Log.d(TAG, "todo complete ${todoId}")
+            Log.d(TAG, "todo complete $todoId")
             val response = api.completedTodo(todoId)
-
             Log.d(TAG, "response -> $response")
-
             return@withContext response.code()
         }
     }
