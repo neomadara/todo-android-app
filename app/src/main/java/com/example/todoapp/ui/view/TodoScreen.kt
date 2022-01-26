@@ -10,42 +10,44 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.todoapp.data.model.TodoModel
+import com.example.todoapp.data.model.Todo
+import com.example.todoapp.ui.viewmodel.TodoUiState
 
 @Composable
 fun TodoScreen(
-    todos: List<TodoModel>,
+    uiState: TodoUiState,
     onAddTodo: (String) -> Unit,
-    isLoading: Boolean,
-    isUpdating: Boolean,
-    isSaving: Boolean,
     onCompleteTodo: (String) -> Unit
 ) {
-    if (isLoading) {
+    if (uiState.isLoading) {
         LoadingComposable()
     } else {
+        val todosListState = when (uiState) {
+            is TodoUiState.HasTodos -> uiState.todos
+            is TodoUiState.NoTodos -> emptyList()
+        }
         Column {
             Text("TODOS", Modifier.align(CenterHorizontally).padding(top = 8.dp))
             TodoInput(onAddTodo)
             TodoList(
-                todos,
+                todosListState,
                 modifier = Modifier
                     .weight(1f)
                     .padding(5.dp),
                 onComplete = onCompleteTodo
             )
         }
-        if(isUpdating) {
+        if(uiState.isUpdating) {
             Toast("Updating TODOS...")
         }
-        if(isSaving) {
+        if(uiState.isSaving) {
             Toast("Saving TODO...")
         }
     }
 }
 
 @Composable
-fun TodoList(todoList: List<TodoModel>, modifier: Modifier = Modifier, onComplete: (String) -> Unit) {
+fun TodoList(todoList: List<Todo>, modifier: Modifier = Modifier, onComplete: (String) -> Unit) {
     LazyColumn(modifier = modifier) {
         items(items = todoList) { todo ->
             TodoCard(todo, onComplete)
@@ -57,11 +59,22 @@ fun TodoList(todoList: List<TodoModel>, modifier: Modifier = Modifier, onComplet
 @Composable
 fun DefaultPreview() {
     val todos = listOf(
-        TodoModel("1", "todo 1"),
-        TodoModel("2", "todo 2"),
-        TodoModel("3", "todo 3")
+        Todo("1", "todo 1"),
+        Todo("2", "todo 2"),
+        Todo("3", "todo 3")
+    )
+    val uiState: TodoUiState = TodoUiState.HasTodos(
+        todos = todos,
+        isLoading = false,
+        isSaving = false,
+        isUpdating = false,
+        errorMessage = ""
     )
     MaterialTheme {
-        TodoScreen(todos = todos, {}, false, false, false, {})
+        TodoScreen(
+            uiState = uiState,
+            onAddTodo = {},
+            onCompleteTodo = {}
+        )
     }
 }

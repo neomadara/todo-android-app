@@ -1,20 +1,66 @@
 package com.example.todoapp.ui.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.data.model.TodoModel
+import com.example.todoapp.data.model.Todo
 import com.example.todoapp.domain.CompleteTodoUseCase
 import com.example.todoapp.domain.GetTodosUseCase
 import com.example.todoapp.domain.SaveTodoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed interface TodoUiState {
+    val isLoading: Boolean
+    val isSaving: Boolean
+    val isUpdating: Boolean
+    val errorMessage: String
+
+    data class NoTodos(
+        override val isLoading: Boolean,
+        override val isSaving: Boolean,
+        override val isUpdating: Boolean,
+        override val errorMessage: String
+    ) : TodoUiState
+
+    data class HasTodos(
+        val todos: List<Todo>,
+        override val isLoading: Boolean,
+        override val isSaving: Boolean,
+        override val isUpdating: Boolean,
+        override val errorMessage: String
+    ): TodoUiState
+}
+
+private data class TodoViewModelState(
+    val todos: List<Todo> = emptyList(),
+    val isLoading: Boolean = true,
+    val isSaving: Boolean = false,
+    val isUpdating: Boolean = false,
+    val errorMessage: String = ""
+) {
+    fun toUiState(): TodoUiState =
+        if (todos.isEmpty()) {
+            TodoUiState.NoTodos(
+                isLoading = isLoading,
+                isSaving = isSaving,
+                isUpdating = isUpdating,
+                errorMessage = errorMessage
+
+            )
+        } else {
+            TodoUiState.HasTodos(
+                todos = todos,
+                isLoading = isLoading,
+                isSaving = isSaving,
+                isUpdating = isUpdating,
+                errorMessage = errorMessage
+            )
+        }
+}
+
 
 @HiltViewModel
 class TodoViewModel @Inject constructor(
@@ -24,26 +70,24 @@ class TodoViewModel @Inject constructor(
 ) : ViewModel() {
     private val TAG = "TodoViewModel"
 
-    private val _todoList = MutableLiveData<List<TodoModel>>()
-    val todoList: LiveData<List<TodoModel>> get() = _todoList
+    private val viewModelState = MutableStateFlow(TodoViewModelState(isLoading = true))
 
-    private val _isLoading = MutableLiveData(true)
-    val isLoading: LiveData<Boolean> get() = _isLoading
-    
-    private val _isSaving = MutableLiveData(false)
-    val isSaving: LiveData<Boolean> get() = _isSaving
-
-    private val _isUpdating = MutableLiveData(false)
-    val isUpdating: LiveData<Boolean> get() = _isUpdating
+    val uiState = viewModelState
+        .map { it.toUiState() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            viewModelState.value.toUiState()
+        )
 
     init {
-        fetchTodos( 
-            onStart = { _isLoading.postValue(true) }, 
-            onCompletion = {_isLoading.postValue(false)} 
+        fetchTodos(
+            onStart = { viewModelState.update { it.copy(isLoading = true) } },
+            onCompletion = { viewModelState.update { it.copy(isLoading = false) } }
         )
     }
 
-    private fun fetchTodos(onStart: () -> Unit, onCompletion: () -> Unit,) {
+    private fun fetchTodos(onStart: () -> Unit, onCompletion: () -> Unit) {
         viewModelScope.launch {
             getTodosUseCase(
                 onError = { Log.e("ERROR", it) }
@@ -52,7 +96,9 @@ class TodoViewModel @Inject constructor(
                 .onCompletion { onCompletion() }
                 .collect { todoList ->
                     Log.d(TAG, "result get todos use case $todoList")
-                    _todoList.postValue(todoList)
+                    viewModelState.update {
+                        it.copy(todos = todoList)
+                    }
                 }
         }
     }
@@ -61,10 +107,17 @@ class TodoViewModel @Inject constructor(
         viewModelScope.launch {
             val result = saveTodoUseCase(title)
             Log.d(TAG, "result use case -> $result")
-            if (result is TodoModel) {
+            if (result is Todo) {
                 Log.d(TAG, "save todo use case ok")
             }
-            fetchTodos(onStart = { _isSaving.postValue(true) }, onCompletion = { _isSaving.postValue(false) })
+            fetchTodos(
+                onStart = { viewModelState.update {
+                    it.copy(isSaving = true)
+                } },
+                onCompletion = { viewModelState.update {
+                    it.copy(isSaving = false)
+                } }
+            )
         }
     }
 
@@ -72,7 +125,14 @@ class TodoViewModel @Inject constructor(
         viewModelScope.launch {
             val result = completeTodoUseCase(todoId)
             Log.d(TAG, "result use case -> $result")
-            fetchTodos(onStart = { _isUpdating.postValue(true) }, onCompletion = { _isUpdating.postValue(false) })
+            fetchTodos(
+                onStart = { viewModelState.update {
+                    it.copy(isUpdating = true)
+                } },
+                onCompletion = { viewModelState.update {
+                    it.copy(isUpdating = false)
+                } }
+            )
         }
     }
 }

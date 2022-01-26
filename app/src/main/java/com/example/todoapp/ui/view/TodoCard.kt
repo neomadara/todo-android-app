@@ -14,10 +14,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.todoapp.data.model.TodoModel
+import com.example.todoapp.data.model.Todo
 
 @Composable
-fun TodoCard(todo: TodoModel, onComplete: (String) -> Unit) {
+fun TodoCard(todo: Todo, onComplete: (String) -> Unit) {
     val checkedState = remember { mutableStateOf(todo.completed) }
     Card(
         modifier = Modifier
@@ -54,7 +54,7 @@ fun TodoCard(todo: TodoModel, onComplete: (String) -> Unit) {
 @Preview
 @Composable
 fun TodoCardPreview() {
-    val todo = TodoModel("", "todo 1", true)
+    val todo = Todo("", "todo 1", true)
     MaterialTheme {
         TodoCard(todo, {})
     }
